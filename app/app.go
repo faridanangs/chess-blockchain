@@ -113,6 +113,7 @@ import (
 	checkersmodule "github.com/faridanangs/checkers/x/checkers"
 	checkersmodulekeeper "github.com/faridanangs/checkers/x/checkers/keeper"
 	checkersmoduletypes "github.com/faridanangs/checkers/x/checkers/types"
+
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 
 	appparams "github.com/faridanangs/checkers/app/params"

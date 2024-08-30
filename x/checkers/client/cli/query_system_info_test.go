@@ -19,13 +19,13 @@ func networkWithSystemInfoObjects(t *testing.T) (*network.Network, types.SystemI
 	t.Helper()
 	cfg := network.DefaultConfig()
 	state := types.GenesisState{}
-	systemInfo := &types.SystemInfo{}
+	systemInfo := state.SystemInfo
 	nullify.Fill(&systemInfo)
 	state.SystemInfo = systemInfo
 	buf, err := cfg.Codec.MarshalJSON(&state)
 	require.NoError(t, err)
 	cfg.GenesisState[types.ModuleName] = buf
-	return network.New(t, cfg), *state.SystemInfo
+	return network.New(t, cfg), state.SystemInfo
 }
 
 func TestShowSystemInfo(t *testing.T) {
