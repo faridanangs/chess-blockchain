@@ -71,5 +71,5 @@ func TestDefaultGenesisState_ExpectedInitialNextId(t *testing.T) {
 			StoredGameList: []types.StoredGame{},
 			SystemInfo:     types.SystemInfo{uint64(1)},
 		},
-	types.DefaultGenesis())
+		types.DefaultGenesis())
 }

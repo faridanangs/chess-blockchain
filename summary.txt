@@ -1,0 +1,17 @@
+#### Simpan variable di dlam terminal
+1. export alice=$(checkersd keys show alice -a --keyring-backend test)
+2. export alice=adresss
+
+
+#### Untuk membuar message tapi tidak di panggil di dalam tx, maka kita harus menambahkan --no-message
+- ignite scaffold map storedGame board turn black red \
+    --index index \
+    --module checkers \
+    --no-message
+
+    
+#### Namun jika kita ingin supaya messagenya bisa di akses melalui tx, maka kita kitak boleh menggunakan --no-message
+- ignite scaffold message createGame black red \
+    --module checkers \
+    --response gameIndex
+
