@@ -2,16 +2,28 @@
 1. export alice=$(checkersd keys show alice -a --keyring-backend test)
 2. export alice=adresss
 
-
 #### Untuk membuar message tapi tidak di panggil di dalam tx, maka kita harus menambahkan --no-message
 - ignite scaffold map storedGame board turn black red \
-    --index index \
-    --module checkers \
-    --no-message
+--index index \
+--module checkers \
+--no-message
 
-    
 #### Namun jika kita ingin supaya messagenya bisa di akses melalui tx, maka kita kitak boleh menggunakan --no-message
 - ignite scaffold message createGame black red \
-    --module checkers \
-    --response gameIndex
+--module checkers \
+--response gameIndex
 
+### Cara membuat event
+ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.MovePlayedEventType,
+			sdk.NewAttribute(types.MovePlayedEventCreator, msg.Creator),
+			sdk.NewAttribute(types.MovePlayedEventGameIndex, msg.GameIndex),
+			sdk.NewAttribute(types.MovePlayedEventCapturedX, strconv.FormatInt(int64(captured.X), 10)),
+			sdk.NewAttribute(types.MovePlayedEventCapturedY, strconv.FormatInt(int64(captured.Y), 10)),
+			sdk.NewAttribute(types.MovePlayedEventWinner, rules.PieceStrings[game.Winner()]),
+		),
+	)
+
+### Cara memanggil event
+    event := sdk.StringifyEvents(ctx.EventManager().ABCIEvents())
