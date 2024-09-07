@@ -1,5 +1,7 @@
 package types
 
+import "time"
+
 const (
 	// ModuleName defines the module name
 	ModuleName = "checkers"
@@ -38,4 +40,20 @@ const (
 	MovePlayedEventCapturedY = "captured-y"
 	MovePlayedEventWinner    = "winner"
 	MovePlayedEventBoard     = "board"
+)
+
+const (
+	MaxTurnDuration = time.Duration(3 * 60 * 1000_000_000) // one day
+	DeadlineLayout  = "2006-01-02 15:04:05.999999999 +0000 UTC"
+)
+
+const (
+	NoFifoIndex = "-1"
+)
+
+const (
+	GameForfeitedEventType      = "game-forfeited"
+	GameForfeitedEventGameIndex = "game-index"
+	GameForfeitedEventWinner    = "winner"
+	GameForfeitedEventBoard     = "board"
 )

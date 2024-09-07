@@ -2,6 +2,7 @@ package keeper_test
 
 import (
 	"context"
+	"fmt"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -99,13 +100,16 @@ func TestPlayMoveSavedGame(t *testing.T) {
 	game1, found := keeper.GetStoredGame(ctx, "1")
 	require.True(t, found)
 	require.EqualValues(t, types.StoredGame{
-		Index:  "1",
-		Board:  "*b*b*b*b|b*b*b*b*|***b*b*b|**b*****|********|r*r*r*r*|*r*r*r*r|r*r*r*r*",
-		Turn:   "r",
-		Black:  bob,
-		Red:    carol,
-		Winner: "*",
+		Index:    "1",
+		Board:    "*b*b*b*b|b*b*b*b*|***b*b*b|**b*****|********|r*r*r*r*|*r*r*r*r|r*r*r*r*",
+		Turn:     "r",
+		Black:    bob,
+		Red:      carol,
+		Winner:   "*",
+		Deadline: types.FormatDeadline(ctx.BlockTime().Add(types.MaxTurnDuration)),
 	}, game1)
+
+	fmt.Println(game1)
 }
 
 func TestPlayMoveEmitted(t *testing.T) {
@@ -364,11 +368,15 @@ func TestPlayMove3SavedGame(t *testing.T) {
 	game1, found := keeper.GetStoredGame(ctx, "1")
 	require.True(t, found)
 	require.EqualValues(t, types.StoredGame{
-		Index:  "1",
-		Board:  "*b*b*b*b|b*b*b*b*|***b*b*b|********|********|b*r*r*r*|*r*r*r*r|r*r*r*r*",
-		Turn:   "r",
-		Black:  bob,
-		Red:    carol,
-		Winner: "*",
+		Index:     "1",
+		Board:     "*b*b*b*b|b*b*b*b*|***b*b*b|********|********|b*r*r*r*|*r*r*r*r|r*r*r*r*",
+		Turn:      "r",
+		Black:     bob,
+		Red:       carol,
+		Winner:    "*",
+		MoveCount: 3,
+		Deadline:  types.FormatDeadline(types.GetNextDeadline(ctx)),
 	}, game1)
+
+	fmt.Println(game1)
 }

@@ -1,4 +1,4 @@
-package types
+package types_test
 
 import (
 	"testing"
@@ -6,6 +6,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/faridanangs/checkers/x/checkers/rules"
 	"github.com/faridanangs/checkers/x/checkers/testutil"
+	"github.com/faridanangs/checkers/x/checkers/types"
 	"github.com/stretchr/testify/require"
 )
 
@@ -14,8 +15,8 @@ const (
 	bob   = testutil.Bob
 )
 
-func GetStoredGame1() StoredGame {
-	return StoredGame{
+func GetStoredGame1() types.StoredGame {
+	return types.StoredGame{
 		Black: alice,
 		Red:   bob,
 		Index: "1",
@@ -64,5 +65,15 @@ func TestGetAddressWrongRed(t *testing.T) {
 		err,
 		"red address is invalid: cosmos1xyxs3skf3f4jfqeuv89yyaqvjc6lffavxqhc8j: decoding bech32 failed: invalid checksum (expected xqhc8g got xqhc8j)")
 	require.EqualError(t, storedGame.Validate(), err.Error())
+	require.EqualError(t, storedGame.Validate(), err.Error())
+}
+
+func TestParseDeadlineMissingMonth(t *testing.T) {
+	storedGame := GetStoredGame1()
+	storedGame.Deadline = "2006-02 15:04:05.999999999 +0000 UTC"
+	_, err := storedGame.GetDeadlineAsTime()
+	require.EqualError(t,
+		err,
+		"deadline cannot be parsed: 2006-02 15:04:05.999999999 +0000 UTC: parsing time \"2006-02 15:04:05.999999999 +0000 UTC\" as \"2006-01-02 15:04:05.999999999 +0000 UTC\": cannot parse \" 15:04:05.999999999 +0000 UTC\" as \"-\"")
 	require.EqualError(t, storedGame.Validate(), err.Error())
 }

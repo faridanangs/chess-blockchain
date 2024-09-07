@@ -27,3 +27,7 @@ ctx.EventManager().EmitEvent(
 
 ### Cara memanggil event
     event := sdk.StringifyEvents(ctx.EventManager().ABCIEvents())
+
+
+
+### EndBlock di endblock ini kita bisa melakukan sesuatu sebelum blocknya di simpan di dalam chain

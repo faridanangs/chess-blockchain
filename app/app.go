@@ -121,7 +121,7 @@ import (
 )
 
 const (
-	AccountAddressPrefix = "cosmos"
+	AccountAddressPrefix = "mulyono"
 	Name                 = "checkers"
 )
 
