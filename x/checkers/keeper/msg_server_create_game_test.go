@@ -29,22 +29,36 @@ func TestCreateGame(t *testing.T) {
 		Creator: alice,
 		Black:   bob,
 		Red:     carol,
-	})
-	msgServer.CreateGame(context, &types.MsgCreateGame{
-		Creator: alice,
-		Black:   bob,
-		Red:     carol,
-	})
-	msgServer.CreateGame(context, &types.MsgCreateGame{
-		Creator: alice,
-		Black:   bob,
-		Red:     carol,
+		Wager:   45,
 	})
 
 	require.Nil(t, err)
 	require.EqualValues(t, &types.MsgCreateGameResponse{
 		GameIndex: "1",
 	}, createResponse)
+
+	events := sdk.StringifyEvents(ctx.EventManager().ABCIEvents())
+	event := events[0]
+	require.EqualValues(t, sdk.StringEvent{
+		Type: "new-game-created",
+		Attributes: []sdk.Attribute{
+			{
+				Key: "creator", Value: alice,
+			},
+			{
+				Key: "game-index", Value: "1",
+			},
+			{
+				Key: "black", Value: bob,
+			},
+			{
+				Key: "red", Value: carol,
+			},
+			{
+				Key: "wager", Value: "45",
+			},
+		},
+	}, event)
 
 	// Block header details
 	fmt.Println(ctx.BlockHeader().AppHash, "Application Hash from Block Header")
