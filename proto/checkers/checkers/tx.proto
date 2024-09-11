@@ -8,12 +8,13 @@ option go_package = "github.com/faridanangs/checkers/x/checkers/types";
 service Msg {
   rpc CreateGame (MsgCreateGame) returns (MsgCreateGameResponse);
   rpc PlayMove   (MsgPlayMove  ) returns (MsgPlayMoveResponse  );
+  rpc CreateTodo (MsgCreateTodo) returns (MsgCreateTodoResponse);
 }
 message MsgCreateGame {
   string creator = 1;
   string black   = 2;
   string red     = 3;
-  uint64 wager = 4;
+  uint64 wager   = 4;
 }
 
 message MsgCreateGameResponse {
@@ -33,5 +34,15 @@ message MsgPlayMoveResponse {
   int32  capturedX = 1;
   int32  capturedY = 2;
   string winner    = 3;
+}
+
+message MsgCreateTodo {
+  string creator = 1;
+  string title   = 2;
+  string text    = 3;
+}
+
+message MsgCreateTodoResponse {
+  string todoIndex = 1;
 }
 

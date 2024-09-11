@@ -14,6 +14,7 @@ import (
 
 type (
 	Keeper struct {
+		bank       types.BankEscrowKeeper // +add
 		cdc        codec.BinaryCodec
 		storeKey   storetypes.StoreKey
 		memKey     storetypes.StoreKey
@@ -22,6 +23,7 @@ type (
 )
 
 func NewKeeper(
+	bank types.BankEscrowKeeper, // +add
 	cdc codec.BinaryCodec,
 	storeKey,
 	memKey storetypes.StoreKey,
@@ -34,6 +36,7 @@ func NewKeeper(
 	}
 
 	return &Keeper{
+		bank:       bank, // +add
 		cdc:        cdc,
 		storeKey:   storeKey,
 		memKey:     memKey,

@@ -8,6 +8,7 @@ export interface MsgCreateGame {
   creator: string;
   black: string;
   red: string;
+  wager: number;
 }
 
 export interface MsgCreateGameResponse {
@@ -29,8 +30,18 @@ export interface MsgPlayMoveResponse {
   winner: string;
 }
 
+export interface MsgCreateTodo {
+  creator: string;
+  title: string;
+  text: string;
+}
+
+export interface MsgCreateTodoResponse {
+  todoIndex: string;
+}
+
 function createBaseMsgCreateGame(): MsgCreateGame {
-  return { creator: "", black: "", red: "" };
+  return { creator: "", black: "", red: "", wager: 0 };
 }
 
 export const MsgCreateGame = {
@@ -43,6 +54,9 @@ export const MsgCreateGame = {
     }
     if (message.red !== "") {
       writer.uint32(26).string(message.red);
+    }
+    if (message.wager !== 0) {
+      writer.uint32(32).uint64(message.wager);
     }
     return writer;
   },
@@ -63,6 +77,9 @@ export const MsgCreateGame = {
         case 3:
           message.red = reader.string();
           break;
+        case 4:
+          message.wager = longToNumber(reader.uint64() as Long);
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -76,6 +93,7 @@ export const MsgCreateGame = {
       creator: isSet(object.creator) ? String(object.creator) : "",
       black: isSet(object.black) ? String(object.black) : "",
       red: isSet(object.red) ? String(object.red) : "",
+      wager: isSet(object.wager) ? Number(object.wager) : 0,
     };
   },
 
@@ -84,6 +102,7 @@ export const MsgCreateGame = {
     message.creator !== undefined && (obj.creator = message.creator);
     message.black !== undefined && (obj.black = message.black);
     message.red !== undefined && (obj.red = message.red);
+    message.wager !== undefined && (obj.wager = Math.round(message.wager));
     return obj;
   },
 
@@ -92,6 +111,7 @@ export const MsgCreateGame = {
     message.creator = object.creator ?? "";
     message.black = object.black ?? "";
     message.red = object.red ?? "";
+    message.wager = object.wager ?? 0;
     return message;
   },
 };
@@ -304,10 +324,125 @@ export const MsgPlayMoveResponse = {
   },
 };
 
+function createBaseMsgCreateTodo(): MsgCreateTodo {
+  return { creator: "", title: "", text: "" };
+}
+
+export const MsgCreateTodo = {
+  encode(message: MsgCreateTodo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.title !== "") {
+      writer.uint32(18).string(message.title);
+    }
+    if (message.text !== "") {
+      writer.uint32(26).string(message.text);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MsgCreateTodo {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMsgCreateTodo();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.title = reader.string();
+          break;
+        case 3:
+          message.text = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgCreateTodo {
+    return {
+      creator: isSet(object.creator) ? String(object.creator) : "",
+      title: isSet(object.title) ? String(object.title) : "",
+      text: isSet(object.text) ? String(object.text) : "",
+    };
+  },
+
+  toJSON(message: MsgCreateTodo): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.title !== undefined && (obj.title = message.title);
+    message.text !== undefined && (obj.text = message.text);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<MsgCreateTodo>, I>>(object: I): MsgCreateTodo {
+    const message = createBaseMsgCreateTodo();
+    message.creator = object.creator ?? "";
+    message.title = object.title ?? "";
+    message.text = object.text ?? "";
+    return message;
+  },
+};
+
+function createBaseMsgCreateTodoResponse(): MsgCreateTodoResponse {
+  return { todoIndex: "" };
+}
+
+export const MsgCreateTodoResponse = {
+  encode(message: MsgCreateTodoResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.todoIndex !== "") {
+      writer.uint32(10).string(message.todoIndex);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MsgCreateTodoResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMsgCreateTodoResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.todoIndex = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgCreateTodoResponse {
+    return { todoIndex: isSet(object.todoIndex) ? String(object.todoIndex) : "" };
+  },
+
+  toJSON(message: MsgCreateTodoResponse): unknown {
+    const obj: any = {};
+    message.todoIndex !== undefined && (obj.todoIndex = message.todoIndex);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<MsgCreateTodoResponse>, I>>(object: I): MsgCreateTodoResponse {
+    const message = createBaseMsgCreateTodoResponse();
+    message.todoIndex = object.todoIndex ?? "";
+    return message;
+  },
+};
+
 /** Msg defines the Msg service. */
 export interface Msg {
   CreateGame(request: MsgCreateGame): Promise<MsgCreateGameResponse>;
   PlayMove(request: MsgPlayMove): Promise<MsgPlayMoveResponse>;
+  CreateTodo(request: MsgCreateTodo): Promise<MsgCreateTodoResponse>;
 }
 
 export class MsgClientImpl implements Msg {
@@ -316,6 +451,7 @@ export class MsgClientImpl implements Msg {
     this.rpc = rpc;
     this.CreateGame = this.CreateGame.bind(this);
     this.PlayMove = this.PlayMove.bind(this);
+    this.CreateTodo = this.CreateTodo.bind(this);
   }
   CreateGame(request: MsgCreateGame): Promise<MsgCreateGameResponse> {
     const data = MsgCreateGame.encode(request).finish();
@@ -327,6 +463,12 @@ export class MsgClientImpl implements Msg {
     const data = MsgPlayMove.encode(request).finish();
     const promise = this.rpc.request("checkers.checkers.Msg", "PlayMove", data);
     return promise.then((data) => MsgPlayMoveResponse.decode(new _m0.Reader(data)));
+  }
+
+  CreateTodo(request: MsgCreateTodo): Promise<MsgCreateTodoResponse> {
+    const data = MsgCreateTodo.encode(request).finish();
+    const promise = this.rpc.request("checkers.checkers.Msg", "CreateTodo", data);
+    return promise.then((data) => MsgCreateTodoResponse.decode(new _m0.Reader(data)));
   }
 }
 

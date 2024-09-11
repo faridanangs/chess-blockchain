@@ -44,7 +44,8 @@ const (
 )
 
 const (
-	MaxTurnDuration = time.Duration(3 * 60 * 1000_000_000) // one day
+	// MaxTurnDuration = time.Duration(24 * 60 * 60 * 1_000_000_000) // one day
+	MaxTurnDuration = time.Duration(4 * 60 * 1_000_000_000) // one day
 	DeadlineLayout  = "2006-01-02 15:04:05.999999999 +0000 UTC"
 )
 
@@ -57,4 +58,13 @@ const (
 	GameForfeitedEventGameIndex = "game-index"
 	GameForfeitedEventWinner    = "winner"
 	GameForfeitedEventBoard     = "board"
+)
+
+const (
+	AddTodoEvent     = "add-todo-event"
+	GetTodoEvent     = "get-todo-event"
+	GetAllTodosEvent = "get-all-todos-event"
+	TodoCreatorEvent = "creator"
+	TodoTitleEvent   = "title"
+	TodoTextEvent    = "test"
 )

@@ -16,6 +16,7 @@ func DefaultGenesis() *GenesisState {
 			FifoTailIndex: NoFifoIndex,
 		},
 		StoredGameList: []StoredGame{},
+		TodoList:       []Todo{},
 		// this line is used by starport scaffolding # genesis/types/default
 		Params: DefaultParams(),
 	}
@@ -33,6 +34,16 @@ func (gs GenesisState) Validate() error {
 			return fmt.Errorf("duplicated index for storedGame")
 		}
 		storedGameIndexMap[index] = struct{}{}
+	}
+	// Check for duplicated index in todo
+	todoIndexMap := make(map[string]struct{})
+
+	for _, elem := range gs.TodoList {
+		index := string(TodoKey(elem.Index))
+		if _, ok := todoIndexMap[index]; ok {
+			return fmt.Errorf("duplicated index for todo")
+		}
+		todoIndexMap[index] = struct{}{}
 	}
 	// this line is used by starport scaffolding # genesis/types/validate
 

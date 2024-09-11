@@ -1,0 +1,12 @@
+syntax = "proto3";
+package checkers.checkers;
+
+option go_package = "github.com/faridanangs/checkers/x/checkers/types";
+
+message Todo {
+  string index = 1; 
+  string creator = 2; 
+  string title = 3; 
+  string text = 4; 
+}
+

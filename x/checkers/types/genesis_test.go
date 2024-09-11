@@ -33,6 +33,14 @@ func TestGenesisState_Validate(t *testing.T) {
 						Index: "1",
 					},
 				},
+				TodoList: []types.Todo{
+					{
+						Index: "0",
+					},
+					{
+						Index: "1",
+					},
+				},
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
 			valid: true,
@@ -41,6 +49,20 @@ func TestGenesisState_Validate(t *testing.T) {
 			desc: "duplicated storedGame",
 			genState: &types.GenesisState{
 				StoredGameList: []types.StoredGame{
+					{
+						Index: "0",
+					},
+					{
+						Index: "0",
+					},
+				},
+			},
+			valid: false,
+		},
+		{
+			desc: "duplicated todo",
+			genState: &types.GenesisState{
+				TodoList: []types.Todo{
 					{
 						Index: "0",
 					},

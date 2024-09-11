@@ -5,6 +5,7 @@ import { PageRequest, PageResponse } from "../../cosmos/base/query/v1beta1/pagin
 import { Params } from "./params";
 import { StoredGame } from "./stored_game";
 import { SystemInfo } from "./system_info";
+import { Todo } from "./todo";
 
 export const protobufPackage = "checkers.checkers";
 
@@ -53,6 +54,24 @@ export interface QueryCanPlayMoveRequest {
 
 export interface QueryCanPlayMoveResponse {
   possible: boolean;
+  reason: string;
+}
+
+export interface QueryGetTodoRequest {
+  index: string;
+}
+
+export interface QueryGetTodoResponse {
+  todo: Todo | undefined;
+}
+
+export interface QueryAllTodoRequest {
+  pagination: PageRequest | undefined;
+}
+
+export interface QueryAllTodoResponse {
+  todo: Todo[];
+  pagination: PageResponse | undefined;
 }
 
 function createBaseQueryParamsRequest(): QueryParamsRequest {
@@ -539,13 +558,16 @@ export const QueryCanPlayMoveRequest = {
 };
 
 function createBaseQueryCanPlayMoveResponse(): QueryCanPlayMoveResponse {
-  return { possible: false };
+  return { possible: false, reason: "" };
 }
 
 export const QueryCanPlayMoveResponse = {
   encode(message: QueryCanPlayMoveResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.possible === true) {
       writer.uint32(8).bool(message.possible);
+    }
+    if (message.reason !== "") {
+      writer.uint32(18).string(message.reason);
     }
     return writer;
   },
@@ -560,6 +582,9 @@ export const QueryCanPlayMoveResponse = {
         case 1:
           message.possible = reader.bool();
           break;
+        case 2:
+          message.reason = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -569,18 +594,232 @@ export const QueryCanPlayMoveResponse = {
   },
 
   fromJSON(object: any): QueryCanPlayMoveResponse {
-    return { possible: isSet(object.possible) ? Boolean(object.possible) : false };
+    return {
+      possible: isSet(object.possible) ? Boolean(object.possible) : false,
+      reason: isSet(object.reason) ? String(object.reason) : "",
+    };
   },
 
   toJSON(message: QueryCanPlayMoveResponse): unknown {
     const obj: any = {};
     message.possible !== undefined && (obj.possible = message.possible);
+    message.reason !== undefined && (obj.reason = message.reason);
     return obj;
   },
 
   fromPartial<I extends Exact<DeepPartial<QueryCanPlayMoveResponse>, I>>(object: I): QueryCanPlayMoveResponse {
     const message = createBaseQueryCanPlayMoveResponse();
     message.possible = object.possible ?? false;
+    message.reason = object.reason ?? "";
+    return message;
+  },
+};
+
+function createBaseQueryGetTodoRequest(): QueryGetTodoRequest {
+  return { index: "" };
+}
+
+export const QueryGetTodoRequest = {
+  encode(message: QueryGetTodoRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.index !== "") {
+      writer.uint32(10).string(message.index);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryGetTodoRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryGetTodoRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.index = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetTodoRequest {
+    return { index: isSet(object.index) ? String(object.index) : "" };
+  },
+
+  toJSON(message: QueryGetTodoRequest): unknown {
+    const obj: any = {};
+    message.index !== undefined && (obj.index = message.index);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryGetTodoRequest>, I>>(object: I): QueryGetTodoRequest {
+    const message = createBaseQueryGetTodoRequest();
+    message.index = object.index ?? "";
+    return message;
+  },
+};
+
+function createBaseQueryGetTodoResponse(): QueryGetTodoResponse {
+  return { todo: undefined };
+}
+
+export const QueryGetTodoResponse = {
+  encode(message: QueryGetTodoResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.todo !== undefined) {
+      Todo.encode(message.todo, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryGetTodoResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryGetTodoResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.todo = Todo.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetTodoResponse {
+    return { todo: isSet(object.todo) ? Todo.fromJSON(object.todo) : undefined };
+  },
+
+  toJSON(message: QueryGetTodoResponse): unknown {
+    const obj: any = {};
+    message.todo !== undefined && (obj.todo = message.todo ? Todo.toJSON(message.todo) : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryGetTodoResponse>, I>>(object: I): QueryGetTodoResponse {
+    const message = createBaseQueryGetTodoResponse();
+    message.todo = (object.todo !== undefined && object.todo !== null) ? Todo.fromPartial(object.todo) : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryAllTodoRequest(): QueryAllTodoRequest {
+  return { pagination: undefined };
+}
+
+export const QueryAllTodoRequest = {
+  encode(message: QueryAllTodoRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.pagination !== undefined) {
+      PageRequest.encode(message.pagination, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryAllTodoRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryAllTodoRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.pagination = PageRequest.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllTodoRequest {
+    return { pagination: isSet(object.pagination) ? PageRequest.fromJSON(object.pagination) : undefined };
+  },
+
+  toJSON(message: QueryAllTodoRequest): unknown {
+    const obj: any = {};
+    message.pagination !== undefined
+      && (obj.pagination = message.pagination ? PageRequest.toJSON(message.pagination) : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryAllTodoRequest>, I>>(object: I): QueryAllTodoRequest {
+    const message = createBaseQueryAllTodoRequest();
+    message.pagination = (object.pagination !== undefined && object.pagination !== null)
+      ? PageRequest.fromPartial(object.pagination)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryAllTodoResponse(): QueryAllTodoResponse {
+  return { todo: [], pagination: undefined };
+}
+
+export const QueryAllTodoResponse = {
+  encode(message: QueryAllTodoResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.todo) {
+      Todo.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.pagination !== undefined) {
+      PageResponse.encode(message.pagination, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryAllTodoResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryAllTodoResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.todo.push(Todo.decode(reader, reader.uint32()));
+          break;
+        case 2:
+          message.pagination = PageResponse.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllTodoResponse {
+    return {
+      todo: Array.isArray(object?.todo) ? object.todo.map((e: any) => Todo.fromJSON(e)) : [],
+      pagination: isSet(object.pagination) ? PageResponse.fromJSON(object.pagination) : undefined,
+    };
+  },
+
+  toJSON(message: QueryAllTodoResponse): unknown {
+    const obj: any = {};
+    if (message.todo) {
+      obj.todo = message.todo.map((e) => e ? Todo.toJSON(e) : undefined);
+    } else {
+      obj.todo = [];
+    }
+    message.pagination !== undefined
+      && (obj.pagination = message.pagination ? PageResponse.toJSON(message.pagination) : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryAllTodoResponse>, I>>(object: I): QueryAllTodoResponse {
+    const message = createBaseQueryAllTodoResponse();
+    message.todo = object.todo?.map((e) => Todo.fromPartial(e)) || [];
+    message.pagination = (object.pagination !== undefined && object.pagination !== null)
+      ? PageResponse.fromPartial(object.pagination)
+      : undefined;
     return message;
   },
 };
@@ -596,6 +835,9 @@ export interface Query {
   StoredGameAll(request: QueryAllStoredGameRequest): Promise<QueryAllStoredGameResponse>;
   /** Queries a list of CanPlayMove items. */
   CanPlayMove(request: QueryCanPlayMoveRequest): Promise<QueryCanPlayMoveResponse>;
+  /** Queries a list of Todo items. */
+  Todo(request: QueryGetTodoRequest): Promise<QueryGetTodoResponse>;
+  TodoAll(request: QueryAllTodoRequest): Promise<QueryAllTodoResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -607,6 +849,8 @@ export class QueryClientImpl implements Query {
     this.StoredGame = this.StoredGame.bind(this);
     this.StoredGameAll = this.StoredGameAll.bind(this);
     this.CanPlayMove = this.CanPlayMove.bind(this);
+    this.Todo = this.Todo.bind(this);
+    this.TodoAll = this.TodoAll.bind(this);
   }
   Params(request: QueryParamsRequest): Promise<QueryParamsResponse> {
     const data = QueryParamsRequest.encode(request).finish();
@@ -636,6 +880,18 @@ export class QueryClientImpl implements Query {
     const data = QueryCanPlayMoveRequest.encode(request).finish();
     const promise = this.rpc.request("checkers.checkers.Query", "CanPlayMove", data);
     return promise.then((data) => QueryCanPlayMoveResponse.decode(new _m0.Reader(data)));
+  }
+
+  Todo(request: QueryGetTodoRequest): Promise<QueryGetTodoResponse> {
+    const data = QueryGetTodoRequest.encode(request).finish();
+    const promise = this.rpc.request("checkers.checkers.Query", "Todo", data);
+    return promise.then((data) => QueryGetTodoResponse.decode(new _m0.Reader(data)));
+  }
+
+  TodoAll(request: QueryAllTodoRequest): Promise<QueryAllTodoResponse> {
+    const data = QueryAllTodoRequest.encode(request).finish();
+    const promise = this.rpc.request("checkers.checkers.Query", "TodoAll", data);
+    return promise.then((data) => QueryAllTodoResponse.decode(new _m0.Reader(data)));
   }
 }
 

@@ -6,16 +6,24 @@ export const protobufPackage = "checkers.checkers";
 
 export interface SystemInfo {
   nextId: number;
+  fifoHeadIndex: string;
+  fifoTailIndex: string;
 }
 
 function createBaseSystemInfo(): SystemInfo {
-  return { nextId: 0 };
+  return { nextId: 0, fifoHeadIndex: "", fifoTailIndex: "" };
 }
 
 export const SystemInfo = {
   encode(message: SystemInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.nextId !== 0) {
       writer.uint32(8).uint64(message.nextId);
+    }
+    if (message.fifoHeadIndex !== "") {
+      writer.uint32(18).string(message.fifoHeadIndex);
+    }
+    if (message.fifoTailIndex !== "") {
+      writer.uint32(26).string(message.fifoTailIndex);
     }
     return writer;
   },
@@ -30,6 +38,12 @@ export const SystemInfo = {
         case 1:
           message.nextId = longToNumber(reader.uint64() as Long);
           break;
+        case 2:
+          message.fifoHeadIndex = reader.string();
+          break;
+        case 3:
+          message.fifoTailIndex = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -39,18 +53,26 @@ export const SystemInfo = {
   },
 
   fromJSON(object: any): SystemInfo {
-    return { nextId: isSet(object.nextId) ? Number(object.nextId) : 0 };
+    return {
+      nextId: isSet(object.nextId) ? Number(object.nextId) : 0,
+      fifoHeadIndex: isSet(object.fifoHeadIndex) ? String(object.fifoHeadIndex) : "",
+      fifoTailIndex: isSet(object.fifoTailIndex) ? String(object.fifoTailIndex) : "",
+    };
   },
 
   toJSON(message: SystemInfo): unknown {
     const obj: any = {};
     message.nextId !== undefined && (obj.nextId = Math.round(message.nextId));
+    message.fifoHeadIndex !== undefined && (obj.fifoHeadIndex = message.fifoHeadIndex);
+    message.fifoTailIndex !== undefined && (obj.fifoTailIndex = message.fifoTailIndex);
     return obj;
   },
 
   fromPartial<I extends Exact<DeepPartial<SystemInfo>, I>>(object: I): SystemInfo {
     const message = createBaseSystemInfo();
     message.nextId = object.nextId ?? 0;
+    message.fifoHeadIndex = object.fifoHeadIndex ?? "";
+    message.fifoTailIndex = object.fifoTailIndex ?? "";
     return message;
   },
 };

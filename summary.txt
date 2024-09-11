@@ -8,7 +8,7 @@
 --module checkers \
 --no-message
 
-#### Namun jika kita ingin supaya messagenya bisa di akses melalui tx, maka kita kitak boleh menggunakan --no-message
+#### Namun jika kita ingin supaya messagenya bisa di akses melalui tx
 - ignite scaffold message createGame black red \
 --module checkers \
 --response gameIndex
@@ -31,3 +31,25 @@ ctx.EventManager().EmitEvent(
 
 
 ### EndBlock di endblock ini kita bisa melakukan sesuatu sebelum blocknya di simpan di dalam chain
+
+
+
+### When we want to add bank in module, we must add it at x/checkers/types/expected_keepers.go
+- and we add this interface 
+ - type BankEscrowKeeper interface {
+	SendCoinsFromModuleToAccount(ctx sdk.Context, senderModule string, recipientAddr sdk.AccAddress, amt sdk.Coins) error
+	SendCoinsFromAccountToModule(ctx sdk.Context, senderAddr sdk.AccAddress, recipientModule string, amt sdk.Coins) error
+ }  this interface must equal with in this url: https://github.com/cosmos/cosmos-sdk/blob/v0.45.4/x/bank/keeper/keeper.go#L35-L37
+
+- after that you must arrange your config in file x/checkers/keeper/keeper.go
+- next you must add app.BankKeeper in file app/app.go lines around: 524
+ - 	app.CheckersKeeper = *checkersmodulekeeper.NewKeeper(
+		app.BankKeeper,
+		....
+ 	)
+- next we must imform the app that your module is going to hold balance in escrow by adding it to whitelist of permitted modules: app/app.go line 191
+ -   maccPerms = map[string][]string{
+        ...
+      checkersmoduletypes.ModuleName: nil,
+    }
+- and we can manage the function who we want use like x/checkers/keeper/wager_handler.go

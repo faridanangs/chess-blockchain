@@ -3,6 +3,7 @@ import _m0 from "protobufjs/minimal";
 import { Params } from "./params";
 import { StoredGame } from "./stored_game";
 import { SystemInfo } from "./system_info";
+import { Todo } from "./todo";
 
 export const protobufPackage = "checkers.checkers";
 
@@ -11,10 +12,11 @@ export interface GenesisState {
   params: Params | undefined;
   systemInfo: SystemInfo | undefined;
   storedGameList: StoredGame[];
+  todoList: Todo[];
 }
 
 function createBaseGenesisState(): GenesisState {
-  return { params: undefined, systemInfo: undefined, storedGameList: [] };
+  return { params: undefined, systemInfo: undefined, storedGameList: [], todoList: [] };
 }
 
 export const GenesisState = {
@@ -27,6 +29,9 @@ export const GenesisState = {
     }
     for (const v of message.storedGameList) {
       StoredGame.encode(v!, writer.uint32(26).fork()).ldelim();
+    }
+    for (const v of message.todoList) {
+      Todo.encode(v!, writer.uint32(34).fork()).ldelim();
     }
     return writer;
   },
@@ -47,6 +52,9 @@ export const GenesisState = {
         case 3:
           message.storedGameList.push(StoredGame.decode(reader, reader.uint32()));
           break;
+        case 4:
+          message.todoList.push(Todo.decode(reader, reader.uint32()));
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -62,6 +70,7 @@ export const GenesisState = {
       storedGameList: Array.isArray(object?.storedGameList)
         ? object.storedGameList.map((e: any) => StoredGame.fromJSON(e))
         : [],
+      todoList: Array.isArray(object?.todoList) ? object.todoList.map((e: any) => Todo.fromJSON(e)) : [],
     };
   },
 
@@ -75,6 +84,11 @@ export const GenesisState = {
     } else {
       obj.storedGameList = [];
     }
+    if (message.todoList) {
+      obj.todoList = message.todoList.map((e) => e ? Todo.toJSON(e) : undefined);
+    } else {
+      obj.todoList = [];
+    }
     return obj;
   },
 
@@ -87,6 +101,7 @@ export const GenesisState = {
       ? SystemInfo.fromPartial(object.systemInfo)
       : undefined;
     message.storedGameList = object.storedGameList?.map((e) => StoredGame.fromPartial(e)) || [];
+    message.todoList = object.todoList?.map((e) => Todo.fromPartial(e)) || [];
     return message;
   },
 };

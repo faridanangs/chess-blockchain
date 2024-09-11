@@ -6,6 +6,7 @@ import "gogoproto/gogo.proto";
 import "checkers/checkers/params.proto";
 import "checkers/checkers/system_info.proto";
 import "checkers/checkers/stored_game.proto";
+import "checkers/checkers/todo.proto";
 
 option go_package = "github.com/faridanangs/checkers/x/checkers/types";
 
@@ -14,5 +15,6 @@ message GenesisState {
            Params     params         = 1 [(gogoproto.nullable) = false];
            SystemInfo systemInfo     = 2 [(gogoproto.nullable) = false];
   repeated StoredGame storedGameList = 3 [(gogoproto.nullable) = false];
+  repeated Todo       todoList       = 4 [(gogoproto.nullable) = false];
 }
 

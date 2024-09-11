@@ -8,6 +8,7 @@ import "cosmos/base/query/v1beta1/pagination.proto";
 import "checkers/checkers/params.proto";
 import "checkers/checkers/system_info.proto";
 import "checkers/checkers/stored_game.proto";
+import "checkers/checkers/todo.proto";
 
 option go_package = "github.com/faridanangs/checkers/x/checkers/types";
 
@@ -39,6 +40,16 @@ service Query {
   // Queries a list of CanPlayMove items.
   rpc CanPlayMove (QueryCanPlayMoveRequest) returns (QueryCanPlayMoveResponse) {
     option (google.api.http).get = "/faridanangs/checkers/checkers/can_play_move/{gameIndex}/{player}/{fromX}/{fromY}/{toX}/{toY}";
+  
+  }
+  
+  // Queries a list of Todo items.
+  rpc Todo    (QueryGetTodoRequest) returns (QueryGetTodoResponse) {
+    option (google.api.http).get = "/faridanangs/checkers/checkers/todo/{index}";
+  
+  }
+  rpc TodoAll (QueryAllTodoRequest) returns (QueryAllTodoResponse) {
+    option (google.api.http).get = "/faridanangs/checkers/checkers/todo";
   
   }
 }
@@ -85,7 +96,24 @@ message QueryCanPlayMoveRequest {
 }
 
 message QueryCanPlayMoveResponse {
-  bool possible = 1;
-  string reason = 2;
+  bool   possible = 1;
+  string reason   = 2;
+}
+
+message QueryGetTodoRequest {
+  string index = 1;
+}
+
+message QueryGetTodoResponse {
+  Todo todo = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllTodoRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllTodoResponse {
+  repeated Todo                                   todo       = 1 [(gogoproto.nullable) = false];
+           cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 

@@ -13,6 +13,10 @@ export interface CheckersMsgCreateGameResponse {
   gameIndex?: string;
 }
 
+export interface CheckersMsgCreateTodoResponse {
+  todoIndex?: string;
+}
+
 export interface CheckersMsgPlayMoveResponse {
   /** @format int32 */
   capturedX?: number;
@@ -42,8 +46,24 @@ export interface CheckersQueryAllStoredGameResponse {
   pagination?: V1Beta1PageResponse;
 }
 
+export interface CheckersQueryAllTodoResponse {
+  todo?: CheckersTodo[];
+
+  /**
+   * PageResponse is to be embedded in gRPC response messages where the
+   * corresponding request message has used PageRequest.
+   *
+   *  message SomeResponse {
+   *          repeated Bar results = 1;
+   *          PageResponse page = 2;
+   *  }
+   */
+  pagination?: V1Beta1PageResponse;
+}
+
 export interface CheckersQueryCanPlayMoveResponse {
   possible?: boolean;
+  reason?: string;
 }
 
 export interface CheckersQueryGetStoredGameResponse {
@@ -52,6 +72,10 @@ export interface CheckersQueryGetStoredGameResponse {
 
 export interface CheckersQueryGetSystemInfoResponse {
   SystemInfo?: CheckersSystemInfo;
+}
+
+export interface CheckersQueryGetTodoResponse {
+  todo?: CheckersTodo;
 }
 
 /**
@@ -69,11 +93,29 @@ export interface CheckersStoredGame {
   black?: string;
   red?: string;
   winner?: string;
+  deadline?: string;
+
+  /** @format uint64 */
+  moveCount?: string;
+  beforeIndex?: string;
+  afterIndex?: string;
+
+  /** @format uint64 */
+  wager?: string;
 }
 
 export interface CheckersSystemInfo {
   /** @format uint64 */
   nextId?: string;
+  fifoHeadIndex?: string;
+  fifoTailIndex?: string;
+}
+
+export interface CheckersTodo {
+  index?: string;
+  creator?: string;
+  title?: string;
+  text?: string;
 }
 
 export interface ProtobufAny {
@@ -376,6 +418,47 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
   querySystemInfo = (params: RequestParams = {}) =>
     this.request<CheckersQueryGetSystemInfoResponse, RpcStatus>({
       path: `/faridanangs/checkers/checkers/system_info`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryTodoAll
+   * @request GET:/faridanangs/checkers/checkers/todo
+   */
+  queryTodoAll = (
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.count_total"?: boolean;
+      "pagination.reverse"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<CheckersQueryAllTodoResponse, RpcStatus>({
+      path: `/faridanangs/checkers/checkers/todo`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryTodo
+   * @summary Queries a list of Todo items.
+   * @request GET:/faridanangs/checkers/checkers/todo/{index}
+   */
+  queryTodo = (index: string, params: RequestParams = {}) =>
+    this.request<CheckersQueryGetTodoResponse, RpcStatus>({
+      path: `/faridanangs/checkers/checkers/todo/${index}`,
       method: "GET",
       format: "json",
       ...params,

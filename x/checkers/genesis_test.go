@@ -25,6 +25,14 @@ func TestGenesis(t *testing.T) {
 				Index: "1",
 			},
 		},
+		TodoList: []types.Todo{
+			{
+				Index: "0",
+			},
+			{
+				Index: "1",
+			},
+		},
 		// this line is used by starport scaffolding # genesis/test/state
 	}
 
@@ -38,6 +46,7 @@ func TestGenesis(t *testing.T) {
 
 	require.Equal(t, genesisState.SystemInfo, got.SystemInfo)
 	require.ElementsMatch(t, genesisState.StoredGameList, got.StoredGameList)
+	require.ElementsMatch(t, genesisState.TodoList, got.TodoList)
 	// this line is used by starport scaffolding # genesis/test/assert
 }
 
